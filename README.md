@@ -17,6 +17,7 @@ C++20 includes the following new language features:
 - [immediate functions](#immediate-functions)
 - [using enum](#using-enum)
 - [lambda capture of parameter pack](#lambda-capture-of-parameter-pack)
+- [char8_t](#char8_t)
 
 C++20 includes the following new library features:
 - [concepts library](#concepts-library)
@@ -31,7 +32,6 @@ C++20 includes the following new library features:
 - [std::bit_cast](#stdbit_cast)
 - [std::midpoint](#stdmidpoint)
 - [std::to_array](#stdto_array)
-- [char8_t](#char8_t)
 
 C++17 includes the following new language features:
 - [template argument deduction for class templates](#template-argument-deduction-for-class-templates)
@@ -107,6 +107,8 @@ C++11 includes the following new language features:
 - [ref-qualified member functions](#ref-qualified-member-functions)
 - [trailing return types](#trailing-return-types)
 - [noexcept specifier](#noexcept-specifier)
+- [char32_t and char16_t](#char32_t-and-char16_t)
+- [raw string literals](#raw-string-literals)
 
 C++11 includes the following new library features:
 - [std::move](#stdmove)
@@ -505,6 +507,12 @@ auto f(Args&&... args){
 }
 ```
 
+### char8_t
+Provides a standard type for representing UTF-8 strings.
+```c++
+char8_t utf8_str[] = u8"\u0123";
+```
+
 ## C++20 Library Features
 
 ### Concepts library
@@ -650,12 +658,6 @@ std::to_array<int>({1, 2, 3}); // returns `std::array<int, 3>`
 
 int a[] = {1, 2, 3};
 std::to_array(a); // returns `std::array<int, 3>`
-```
-
-### char8_t
-Provides a standard type for representing UTF-8 strings.
-```c++
-char8_t utf8_str[] = u8"\u0123";
 ```
 
 ## C++17 Language Features
@@ -1922,6 +1924,34 @@ void g() noexcept {
     f();          // valid, even if f throws
     throw 42;     // valid, effectively a call to std::terminate
 }
+```
+
+### char32_t and char16_t
+Provides standard types for representing UTF-8 strings.
+```c++
+char32_t utf8_str[] = U"\u0123";
+char16_t utf8_str[] = u"\u0123";
+```
+
+### Raw string literals
+C++11 introduces a new way to declare string literals as "raw string literals". Characters issued from an escape sequence (tabs, line feeds, single backslashes, etc.) can be inputted raw while preserving formatting. This is useful, for example, to write literary text, which might contain a lot of quotes or special formatting. This can make your string literals easier to read and maintain.
+
+A raw string literal is declared using the following syntax:
+```
+R"delimiter(raw_characters)delimiter"
+```
+where:
+* `delimiter` is an optional sequence of characters made of any source character except parentheses, backslashes and spaces.
+* `raw_characters` is any raw character sequence; must not contain the closing sequence `")delimiter"`.
+
+Example:
+```cpp
+// msg1 and msg2 are equivalent.
+const char* msg1 = "\nHello,\n\tworld!\n";
+const char* msg2 = R"(
+Hello,
+	world!
+)";
 ```
 
 ## C++11 Library Features
